@@ -1,0 +1,16 @@
+This is Neko Project II Wii (np2wii).
+It is based off of Neko Project II v0.81a, by YUI (http://www.yui.ne.jp/np2/)
+The goal of this project is to fully port Neko Project II to the Nintendo Wii console.
+It will have all the features that the original had. It will also have a nice Graphical User Interface.
+
+np2wii is licensed under the GNU GPL version 2.
+np2wii is copyright (C)2009 SquidMan (Alex Marshall)
+
+Credits:
+------------------------------------
+YUI                   - For his fantastic emulator.
+#PC98                 - Number one PC98 channel on EFnet!
+#HACKERCHANNEL        - The main hangout for hackers.
+SDL Team              - They made this possible!
+Tantric & SDLWii Team - They took SDL and made it Wiitastic!
+SquidMan              - Porting.

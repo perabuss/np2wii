@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/2/trunk/mona/win32s
+END
+sdlvideo.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/mona/win32s/sdlvideo.h
+END
+compiler.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/mona/win32s/compiler.h
+END
+memmng.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/mona/win32s/memmng.c
+END
+sdl.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/mona/win32s/sdl.c
+END
+sdlevent.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/mona/win32s/sdlevent.c
+END
+memmng.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/mona/win32s/memmng.h
+END
+sdlmpw.c
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/mona/win32s/sdlmpw.c
+END
+sdl.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/mona/win32s/sdl.h
+END
+sdlevent.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/mona/win32s/sdlevent.h
+END
+sdlvideo.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/mona/win32s/sdlvideo.c
+END
+sdlmpw.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/mona/win32s/sdlmpw.h
+END

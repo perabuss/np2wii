@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/2/trunk/win9x/debuguty
+END
+viewmenu.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewmenu.cpp
+END
+viewer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewer.cpp
+END
+viewmenu.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewmenu.h
+END
+viewer.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewer.h
+END
+viewreg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewreg.cpp
+END
+viewcmn.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewcmn.cpp
+END
+viewseg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewseg.cpp
+END
+viewmem.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewmem.cpp
+END
+view1mb.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/win9x/debuguty/view1mb.cpp
+END
+viewasm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewasm.cpp
+END
+viewreg.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewreg.h
+END
+viewcmn.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewcmn.h
+END
+viewmem.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewmem.h
+END
+viewseg.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewseg.h
+END
+view1mb.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/debuguty/view1mb.h
+END
+viewsnd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewsnd.cpp
+END
+viewasm.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewasm.h
+END
+viewsnd.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/debuguty/viewsnd.h
+END

@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 25
+/svn/!svn/ver/2/trunk/fdd
+END
+fdd_xdf.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fdd_xdf.c
+END
+fddfile.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fddfile.h
+END
+sxsicd.h
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/fdd/sxsicd.h
+END
+fdd_xdf.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fdd_xdf.h
+END
+newdisk.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/newdisk.c
+END
+diskdrv.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/diskdrv.c
+END
+sxsihdd.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/sxsihdd.c
+END
+newdisk.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/newdisk.h
+END
+diskdrv.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/diskdrv.h
+END
+sxsihdd.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/sxsihdd.h
+END
+fdd_mtr.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fdd_mtr.c
+END
+fdd_d88.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fdd_d88.c
+END
+fdd_mtr.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fdd_mtr.h
+END
+fdd_d88.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fdd_d88.h
+END
+fdd_mtr.res
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/2/trunk/fdd/fdd_mtr.res
+END
+sxsi.c
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/2/trunk/fdd/sxsi.c
+END
+hddboot.res
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/2/trunk/fdd/hddboot.res
+END
+d88head.h
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/d88head.h
+END
+sxsi.h
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/2/trunk/fdd/sxsi.h
+END
+fddfile.c
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/2/trunk/fdd/fddfile.c
+END
+sxsicd.c
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/fdd/sxsicd.c
+END

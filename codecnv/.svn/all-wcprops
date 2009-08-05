@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 29
+/svn/!svn/ver/2/trunk/codecnv
+END
+textcnv.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/codecnv/textcnv.h
+END
+ucs2utf8.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/codecnv/ucs2utf8.c
+END
+utf8ucs2.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/codecnv/utf8ucs2.c
+END
+eucsjis.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/codecnv/eucsjis.c
+END
+sjiseuc.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/codecnv/sjiseuc.c
+END
+sjisucs2.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/codecnv/sjisucs2.c
+END
+codecnv.h
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/codecnv/codecnv.h
+END
+tcswap32.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/codecnv/tcswap32.c
+END
+tcswap16.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/codecnv/tcswap16.c
+END
+eucucs2.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/codecnv/eucucs2.c
+END
+textcnv.c
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/codecnv/textcnv.c
+END

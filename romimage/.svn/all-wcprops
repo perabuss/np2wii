@@ -1,0 +1,203 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/2/trunk/romimage
+END
+ssp_msw.x86
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/ssp_msw.x86
+END
+startup.asm
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/startup.asm
+END
+keyboard.x86
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/keyboard.x86
+END
+debug.mac
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/romimage/debug.mac
+END
+memchk.x86
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/romimage/memchk.x86
+END
+itf.mk
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/2/trunk/romimage/itf.mk
+END
+ssp.x86
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/romimage/ssp.x86
+END
+sasibios.asm
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/sasibios.asm
+END
+pc98.inc
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/romimage/pc98.inc
+END
+itfd.mk
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/romimage/itfd.mk
+END
+scsibios.asm
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/scsibios.asm
+END
+idebios.asm
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/idebios.asm
+END
+beep.x86
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/2/trunk/romimage/beep.x86
+END
+firmware.x86
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/firmware.x86
+END
+itf.asm
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/romimage/itf.asm
+END
+hddboot.asm
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/hddboot.asm
+END
+resource.txt
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/resource.txt
+END
+keyboard.inc
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/keyboard.inc
+END
+dataseg.inc
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/dataseg.inc
+END
+itfsub.x86
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/romimage/itfsub.x86
+END
+np2.x86
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/romimage/np2.x86
+END
+ssp_dip.x86
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/ssp_dip.x86
+END
+makefile.w32
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/makefile.w32
+END
+textdisp.x86
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/romimage/textdisp.x86
+END
+itf.inc
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/romimage/itf.inc
+END
+ssp_sub.x86
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/ssp_sub.x86
+END
+ssp_res.x86
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/ssp_res.x86
+END
+lio.asm
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2/trunk/romimage/lio.asm
+END
+r.bat
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/2/trunk/romimage/r.bat
+END
+dipsw.x86
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/romimage/dipsw.x86
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/romimage/readme.txt
+END
+memsw.x86
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/romimage/memsw.x86
+END
+process.mac
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/romimage/process.mac
+END

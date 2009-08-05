@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/svn/!svn/ver/2/trunk/win9x/x86
+END
+cputype.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/win9x/x86/cputype.h
+END
+opngeng.x86
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/win9x/x86/opngeng.x86
+END
+makegrph.x86
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/win9x/x86/makegrph.x86
+END
+pccore.inc
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/win9x/x86/pccore.inc
+END
+np2asm.inc
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/win9x/x86/np2asm.inc
+END
+cputype.x86
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/win9x/x86/cputype.x86
+END
+parts.x86
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/win9x/x86/parts.x86
+END
+vram.inc
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/2/trunk/win9x/x86/vram.inc
+END

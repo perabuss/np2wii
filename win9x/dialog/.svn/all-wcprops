@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/2/trunk/win9x/dialog
+END
+d_bmp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/win9x/dialog/d_bmp.cpp
+END
+d_screen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/win9x/dialog/d_screen.cpp
+END
+d_serial.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/win9x/dialog/d_serial.cpp
+END
+dialogs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/dialog/dialogs.cpp
+END
+d_clnd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/win9x/dialog/d_clnd.cpp
+END
+dialog.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/2/trunk/win9x/dialog/dialog.h
+END
+d_mpu98.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/dialog/d_mpu98.cpp
+END
+np2class.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/win9x/dialog/np2class.cpp
+END
+dialogs.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/2/trunk/win9x/dialog/dialogs.h
+END
+d_config.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/2/trunk/win9x/dialog/d_config.cpp
+END
+np2class.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/win9x/dialog/np2class.h
+END
+d_sound.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/dialog/d_sound.cpp
+END
+d_about.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/2/trunk/win9x/dialog/d_about.cpp
+END
+d_disk.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/2/trunk/win9x/dialog/d_disk.cpp
+END
