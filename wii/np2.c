@@ -129,7 +129,8 @@ static void processwait(UINT cnt) {
 
 static void wii_load_game()
 {
-	wiimenu_loadgame(); //diskdrv_sethdd(0x00, "sd:/PC98ROM/test.hdi");		// Load the first SASI/IDE drive.
+	//wiimenu_loadgame(); 
+	diskdrv_sethdd(0x00, "sd:/PC98/ROMS/test.hdi");		// Load the first SASI/IDE drive.
 }
 
 void wii_shutdown(s32 chan)
@@ -201,7 +202,7 @@ int main(int argc, char **argv) {
 	sysmng_initialize();
 	taskmng_initialize();
 	strcpy(np2cfg.fontfile, "sd:/PC98/DATA/font.bmp");
-	strcpy(np2cfg.biospath, "sd:/PC98/BIOS/");
+//	strcpy(np2cfg.biospath, "sd:/PC98/BIOS/");
 	pccore_init();
 	S98_init();
 

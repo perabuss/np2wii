@@ -153,7 +153,7 @@ void wiimenu_loadgame()
 
 void wiimenu_initialize()
 {
-	fprintf(logfp, "Initting!\n");
-	wiimenufont = SFont_InitFont(SDL_LoadBMP_RW(SDL_RWFromFile("sd:/PC98/DATA/menufont.bmp", "rb"), 1));
+//	fprintf(logfp, "Initting!\n");
+//	wiimenufont = SFont_InitFont(SDL_LoadBMP_RW(SDL_RWFromFile("sd:/PC98/DATA/menufont.bmp", "rb"), 1));
 }
 
