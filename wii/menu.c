@@ -1,5 +1,5 @@
 /*****************************************************************************/
-/*  Neko Project ii                                                          */
+/*  Neko Project II Wii                                                      */
 /* ------------------------------------------------------------------------- */
 /*  menu.c                                                                   */
 /*  The Wii specific menu code. Should be launchable from any point in the   */
@@ -20,11 +20,7 @@
 #include	"SFont.h"
 #include	<fat.h>
 #include	<dirent.h>
-
-extern SDL_Joystick* wiimote1;
-
-SFont_Font* wiimenufont;
-SDL_Surface* screensurf;
+#include	<ogc/consol.h>
 
 #define DEBUG_NP2
 #ifdef DEBUG_NP2
@@ -39,61 +35,13 @@ extern int base_control_map[];
 extern int vert_wiimote_map[];
 extern int hori_wiimote_map[];
 
-UINT8 xhatsdown = 0;
-UINT32 xbuttonsdown = 0;
-
-void wiimenu_controllerhandle()
-{
-	SDL_JoystickUpdate();
-	UINT8 wiimote_hat = SDL_JoystickGetHat(wiimote1, 0);
-	UINT32 buttons = 0;
-	// A button
-	if(SDL_JoystickGetButton(wiimote1, 0)) buttons |= 1 << 0;
-	// B button
-	if(SDL_JoystickGetButton(wiimote1, 1)) buttons |= 1 << 1;
-	// 1 button
-	if(SDL_JoystickGetButton(wiimote1, 2)) buttons |= 1 << 2;
-	// 2 button
-	if(SDL_JoystickGetButton(wiimote1, 3)) buttons |= 1 << 3;
-	// MINUS button
-	if(SDL_JoystickGetButton(wiimote1, 4)) buttons |= 1 << 4;
-	// PLUS button
-	if(SDL_JoystickGetButton(wiimote1, 5)) buttons |= 1 << 5;
-	// HOME button
-	if(SDL_JoystickGetButton(wiimote1, 6)) buttons |= 1 << 6;
-	int idx = 0;
-	int* controlmap;
-#ifdef WIIMOTE_VERT
-	controlmap = vert_wiimote_map;
-#endif
-#ifdef WIIMOTE_HORI
-	controlmap = hori_wiimote_map;
-#endif
-	for(idx = 0; idx < 4; idx++) {
-		if((wiimote_hat & base_control_map[idx]) && !(xhatsdown & base_control_map[idx])) { 
-			xhatsdown |= base_control_map[idx];
-			sdlkbd_keydown(controlmap[idx]);
-		}else if(xhatsdown & base_control_map[idx]) { xhatsdown &= ~base_control_map[idx];
-			sdlkbd_keyup(controlmap[idx]);
-		}
-	}
-	for(idx = 4; idx < CONTROL_COUNT; idx++) {
-		if((buttons & (base_control_map[idx])) && !(xbuttonsdown & (base_control_map[idx]))) { 
-			sdlkbd_keydown(controlmap[idx]);
-			xbuttonsdown |= base_control_map[idx];
-		}else if(xbuttonsdown & (base_control_map[idx])) {
-			sdlkbd_keyup(controlmap[idx]);
-			xbuttonsdown &= ~(base_control_map[idx]);
-		}
-	}
-	
-}
-
 typedef struct {
 	char	name[256];
 	char	path[256];
 	int	isdir;
 } gamelistentry;
+
+void* con_bak;
 
 int wiimenu_buildgamelist(char* root, gamelistentry* gamelist)
 {
@@ -127,16 +75,6 @@ int wiimenu_buildgamelist(char* root, gamelistentry* gamelist)
 
 int wiimenu_choosefromlist(gamelistentry* gamelist, int listcnt)
 {
-	fprintf(logfp, "getsurf!\n");
-	screensurf = SDL_GetVideoSurface();
-	fprintf(logfp, "locksurf!\n");
-	SDL_LockSurface(screensurf);
-	fprintf(logfp, "writesurf!\n");
-	SFont_WriteCenter(screensurf, wiimenufont, 20, "Test");
-	fprintf(logfp, "unlocksurf!\n");
-	SDL_UnlockSurface(screensurf);
-	fprintf(logfp, "Mission accomplished!\n");
-	sleep(10);
 	return 0;
 }
 

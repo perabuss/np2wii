@@ -21,9 +21,9 @@ typedef struct {
 
 // ---- GCIRCLE
 
-static void draw4(const _GLIO *lio, SINT16 x, SINT16 y,
-											SINT16 d1, SINT16 d2, REG8 pal) {
 
+static void draw4(const _GLIO *lio, SINT16 x, SINT16 y, SINT16 d1, SINT16 d2, REG8 pal)
+{
 	SINT16	x1;
 	SINT16	x2;
 	SINT16	y1;
@@ -39,8 +39,8 @@ static void draw4(const _GLIO *lio, SINT16 x, SINT16 y,
 	lio_pset(lio, x2, y2, pal);
 }
 
-REG8 lio_gcircle(GLIO lio) {
-
+REG8 lio_gcircle(GLIO lio)
+{
 	GCIRCLE	dat;
 	SINT16	cx;
 	SINT16	cy;

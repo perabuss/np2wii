@@ -85,6 +85,8 @@ typedef	unsigned char	BYTE;
 #define	OEMSPRINTF			sprintf
 #define	OEMSTRLEN			strlen
 
+#define SIZE_VGA
+
 #if !defined(SIZE_VGA)
 #define	RGB16		UINT32
 #define	SIZE_QVGA

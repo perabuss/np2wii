@@ -53,8 +53,11 @@ INCLUDES	=	$(WIISRC) $(BASE) $(COMMON) $(I286C) $(IO) $(CBUS) $(BIOS) $(SOUND)  
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS		= -g -Wall $(MACHDEP) $(INCLUDE)
-# CFLAGS	= -O2 -g -Wall $(MACHDEP) $(INCLUDE)
+NORMFLAGS	=	-g -Wall $(MACHDEP) $(INCLUDE)
+OPTIMALFLAGS	=	-O3 -g -Wall $(MACHDEP) $(INCLUDE) -falign-loops=16 -falign-jumps=16 \
+			-falign-functions=16 -malign-natural -ffast-math -fstrict-aliasing \
+			-funroll-loops -ftree-loop-linear -fsched-interblock -fgcse-sm
+CFLAGS		=	$(OPTIMALFLAGS)
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS		=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
@@ -62,7 +65,7 @@ LDFLAGS		=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS		:= -lSDL_ttf -lfreetype -lSDL -lwiiuse -lbte -lfat -logc -lm
+LIBS		:= -lSDL_ttf -lfreetype -lSDL -lwiikeyboard -lwiiuse -lbte -lfat -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

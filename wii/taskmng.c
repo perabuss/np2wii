@@ -7,6 +7,8 @@
 #include	"menubase.h"
 #include	"sysmenu.h"
 #include	<SDL/SDL.h>
+#include	<wiiuse/wiiuse.h>
+#include	<wiiuse/wpad.h>
 
 SDL_Joystick* wiimote1;
 
@@ -20,17 +22,17 @@ extern FILE* logfp;
 #define	CONTROL_COUNT	11
 
 int base_control_map[] = {
-	SDL_HAT_UP,
-	SDL_HAT_DOWN,
-	SDL_HAT_LEFT,
-	SDL_HAT_RIGHT,
-	1 << 0,
-	1 << 1,
-	1 << 2,
-	1 << 3,
-	1 << 4,
-	1 << 5,
-	1 << 6
+	WPAD_BUTTON_UP,
+	WPAD_BUTTON_DOWN,
+	WPAD_BUTTON_LEFT,
+	WPAD_BUTTON_RIGHT,
+	WPAD_BUTTON_A,
+	WPAD_BUTTON_B,
+	WPAD_BUTTON_1,
+	WPAD_BUTTON_2,
+	WPAD_BUTTON_MINUS,
+	WPAD_BUTTON_PLUS,
+	WPAD_BUTTON_HOME
 };
 
 int vert_wiimote_map[] = {
@@ -73,13 +75,6 @@ void sighandler(int signo) {
 
 
 void taskmng_initialize(void) {
-	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-	wiimote1 = SDL_JoystickOpen(0);
-	if(wiimote1 == NULL) {
-		printf("Couldn't open wiimote =(\n");
-		sleep(10);
-		return;
-	}
 	task_avail = TRUE;
 }
 
@@ -92,41 +87,40 @@ UINT8 hatsdown = 0;
 UINT32 buttonsdown = 0;
 
 void taskmng_rol(void) {
-	SDL_JoystickUpdate();
-	UINT8 wiimote_hat = SDL_JoystickGetHat(wiimote1, 0);
 	UINT32 buttons = 0;
+	WPAD_ScanPads();
+	u32 btn = WPAD_ButtonsDown(0) | WPAD_ButtonsHeld(0);
+	buttons = btn;
+/*	// UP button
+	if(btn & WPAD_BUTTON_UP)	buttons |= base_control_map[0];
+	// DOWN button
+	if(btn & WPAD_BUTTON_DOWN)	buttons |= base_control_map[1];
+	// LEFT button
+	if(btn & WPAD_BUTTON_LEFT)	buttons |= base_control_map[2];
+	// RIGHT button
+	if(btn & WPAD_BUTTON_RIGHT)	buttons |= base_control_map[3];
+
 	// A button
-	if(SDL_JoystickGetButton(wiimote1, 0)) buttons |= 1 << 0;
+	if(btn & WPAD_BUTTON_A)		buttons |= base_control_map[4];
 	// B button
-	if(SDL_JoystickGetButton(wiimote1, 1)) buttons |= 1 << 1;
+	if(btn & WPAD_BUTTON_B)		buttons |= base_control_map[5];
 	// 1 button
-	if(SDL_JoystickGetButton(wiimote1, 2)) buttons |= 1 << 2;
+	if(btn & WPAD_BUTTON_1)		buttons |= base_control_map[6];
 	// 2 button
-	if(SDL_JoystickGetButton(wiimote1, 3)) buttons |= 1 << 3;
+	if(btn & WPAD_BUTTON_2)		buttons |= base_control_map[7];
 	// MINUS button
-	if(SDL_JoystickGetButton(wiimote1, 4)) buttons |= 1 << 4;
+	if(btn & WPAD_BUTTON_MINUS)	buttons |= base_control_map[8];
 	// PLUS button
-	if(SDL_JoystickGetButton(wiimote1, 5)) buttons |= 1 << 5;
+	if(btn & WPAD_BUTTON_PLUS)	buttons |= base_control_map[9];
 	// HOME button
-	if(SDL_JoystickGetButton(wiimote1, 6)) buttons |= 1 << 6;
+	if(btn & WPAD_BUTTON_HOME)	buttons |= base_control_map[10];*/
 	int idx = 0;
-	int* controlmap;
-#ifdef WIIMOTE_VERT
-	controlmap = vert_wiimote_map;
-#endif
+	int* controlmap = vert_wiimote_map;
 #ifdef WIIMOTE_HORI
 	controlmap = hori_wiimote_map;
 #endif
-	for(idx = 0; idx < 4; idx++) {
-		if((wiimote_hat & base_control_map[idx]) && !(hatsdown & base_control_map[idx])) { 
-			hatsdown |= base_control_map[idx];
-			sdlkbd_keydown(controlmap[idx]);
-		}else if(hatsdown & base_control_map[idx]) { hatsdown &= ~base_control_map[idx];
-			sdlkbd_keyup(controlmap[idx]);
-		}
-	}
-	for(idx = 4; idx < CONTROL_COUNT; idx++) {
-		if((buttons & (base_control_map[idx])) && !(buttonsdown & (base_control_map[idx]))) { 
+	for(idx = 0; idx < CONTROL_COUNT; idx++) {
+		if((buttons & (base_control_map[idx])) && (!(buttonsdown & (base_control_map[idx])))) {
 			sdlkbd_keydown(controlmap[idx]);
 			buttonsdown |= base_control_map[idx];
 		}else if(buttonsdown & (base_control_map[idx])) {

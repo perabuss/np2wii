@@ -33,7 +33,6 @@
 #include	<SDL/SDL.h>
 #include	<SDL/SDL_ttf.h>
 
-#define		DEBUG_NP2
 
 
 #ifdef DEBUG_NP2
@@ -129,8 +128,8 @@ static void processwait(UINT cnt) {
 
 static void wii_load_game()
 {
-	//wiimenu_loadgame(); 
-	diskdrv_sethdd(0x00, "sd:/PC98/ROMS/test.hdi");		// Load the first SASI/IDE drive.
+	wiimenu_loadgame();
+	//diskdrv_sethdd(0x00, "sd:/PC98/ROMS/test.hdi");		// Load the first SASI/IDE drive.
 }
 
 void wii_shutdown(s32 chan)
@@ -215,8 +214,9 @@ int main(int argc, char **argv) {
 			goto np2main_err5;
 		}
 	}
-	np2oscfg.DRAW_SKIP = 4;
-	np2oscfg.NOWAIT = 1;
+//	np2oscfg.DRAW_SKIP = 4;
+//	np2oscfg.NOWAIT = 1;
+	np2oscfg.NOWAIT = 0;
 	while(taskmng_isavail()) {
 		taskmng_rol();
 		if (np2oscfg.NOWAIT) {

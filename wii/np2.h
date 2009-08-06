@@ -16,3 +16,4 @@ enum {
 
 extern	NP2OSCFG	np2oscfg;
 
+//#define		DEBUG_NP2

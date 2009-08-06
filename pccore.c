@@ -572,6 +572,7 @@ static int execcnt = 0;
 int piccnt = 0;
 #endif
 
+#undef TRACE
 
 void pccore_postevent(UINT32 event) {	// yet!
 
@@ -582,7 +583,10 @@ void pccore_exec(BOOL draw) {
 
 	drawframe = draw;
 //	keystat_sync();
+#ifndef NOSOUND
 	soundmng_sync();
+#endif //!NOSOUND
+
 	mouseif_sync();
 	pal_eventclear();
 
@@ -625,7 +629,9 @@ void pccore_exec(BOOL draw) {
 	diskdrv_callback();
 	calendar_inc();
 	S98_sync();
+#ifndef NOSOUND
 	sound_sync();													// happy!
+#endif //!NOSOUND
 
 	if (hardwarereset) {
 		hardwarereset = FALSE;

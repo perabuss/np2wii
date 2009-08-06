@@ -8,18 +8,20 @@
 #include	"menubase.h"
 #include	"np2.h"
 
-#define DEBUG_NP2
-
 #ifdef DEBUG_NP2
 extern FILE* logfp;
 #endif //DEBUG_NP2
 
+#define USE_SDL
+
 typedef struct {
 	BOOL		enable;
-	int			width;
-	int			height;
-	int			bpp;
+	int		width;
+	int		height;
+	int		bpp;
+#if defined(USE_SDL)
 	SDL_Surface	*surface;
+#endif //USE_SDL
 	VRAMHDL		vram;
 } SCRNMNG;
 
@@ -43,12 +45,17 @@ typedef struct {
 	int		dstpos;
 } DRAWRECT;
 
-static BOOL calcdrawrect(SDL_Surface *surface, DRAWRECT *dr, VRAMHDL s, const RECT_T *rt) {
 
+#if defined(USE_SDL)
+static BOOL calcdrawrect(SDL_Surface *surface, DRAWRECT *dr, VRAMHDL s, const RECT_T *rt)
+#endif //USE_SDL
+{
 	int		pos;
 
+#if defined(USE_SDL)
 	dr->xalign = surface->format->BytesPerPixel;
 	dr->yalign = surface->pitch;
+#endif //USE_SDL
 	dr->srcpos = 0;
 	dr->dstpos = 0;
 	dr->width = min(scrnmng.width, s->width);
@@ -71,18 +78,19 @@ static BOOL calcdrawrect(SDL_Surface *surface, DRAWRECT *dr, VRAMHDL s, const RE
 }
 
 
-void scrnmng_initialize(void) {
-
+void scrnmng_initialize(void)
+{
 	scrnstat.width = 640;
 	scrnstat.height = 400;
 }
 
-BOOL scrnmng_create(int width, int height) {
-
+BOOL scrnmng_create(int width, int height)
+{
+#if defined(USE_SDL)
 	char			s[256];
-const SDL_VideoInfo	*vinfo;
+	const SDL_VideoInfo	*vinfo;
 	SDL_Surface		*surface;
-	SDL_PixelFormat	*fmt;
+	SDL_PixelFormat		*fmt;
 	BOOL			r;
 
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
@@ -150,15 +158,16 @@ const SDL_VideoInfo	*vinfo;
 #endif //DEBUG_NP2
 		return(FAILURE);
 	}
+#endif //USE_SDL
 }
 
-void scrnmng_destroy(void) {
-
+void scrnmng_destroy(void)
+{
 	scrnmng.enable = FALSE;
 }
 
-RGB16 scrnmng_makepal16(RGB32 pal32) {
-
+RGB16 scrnmng_makepal16(RGB32 pal32)
+{
 	RGB16	ret;
 
 	ret = (pal32.p.r & 0xf8) << 8;
@@ -171,31 +180,37 @@ RGB16 scrnmng_makepal16(RGB32 pal32) {
 	return(ret);
 }
 
-void scrnmng_setwidth(int posx, int width) {
-
+void scrnmng_setwidth(int posx, int width)
+{
 	scrnstat.width = width;
 }
 
-void scrnmng_setheight(int posy, int height) {
-
+void scrnmng_setheight(int posy, int height)
+{
 	scrnstat.height = height;
 }
 
-const SCRNSURF *scrnmng_surflock(void) {
-
+SCRNSURF *scrnmng_surflock(void)
+{
+#if defined(USE_SDL)
 	SDL_Surface	*surface;
+#endif //USE_SDL
 
 	if (scrnmng.vram == NULL) {
+#if defined(USE_SDL)
 		surface = SDL_GetVideoSurface();
+#endif //USE_SDL
 		if (surface == NULL) {
 			return(NULL);
 		}
+#if defined(USE_SDL)
 		SDL_LockSurface(surface);
 		scrnmng.surface = surface;
 		scrnsurf.ptr = (BYTE *)surface->pixels;
 		scrnsurf.xalign = surface->format->BytesPerPixel;
 		scrnsurf.yalign = surface->pitch;
 		scrnsurf.bpp = surface->format->BitsPerPixel;
+#endif //USE_SDL
 	}
 	else {
 		scrnsurf.ptr = scrnmng.vram->ptr;
@@ -209,17 +224,21 @@ const SCRNSURF *scrnmng_surflock(void) {
 	return(&scrnsurf);
 }
 
-static void draw_onmenu(void) {
-
+static void draw_onmenu(void)
+{
 	RECT_T		rt;
+#if defined(USE_SDL)
 	SDL_Surface	*surface;
+#endif //USE_SDL)
+
 	DRAWRECT	dr;
-const BYTE		*p;
+	const BYTE	*p;
 	BYTE		*q;
-const BYTE		*a;
-	int			salign;
-	int			dalign;
-	int			x;
+	const BYTE	*a;
+	int		salign;
+	int		dalign;
+	int		x;
+	BYTE		*pixs;
 
 	rt.left = 0;
 	rt.top = 0;
@@ -230,17 +249,22 @@ const BYTE		*a;
 	rt.bottom >>= 1;
 #endif
 
+#if defined(USE_SDL)
 	surface = SDL_GetVideoSurface();
 	if (surface == NULL) {
 		return;
 	}
 	SDL_LockSurface(surface);
+#endif //USE_SDL
 	if (calcdrawrect(surface, &dr, menuvram, &rt) == SUCCESS) {
+#if defined(USE_SDL)
+		pixs = (BYTE*)surface->pixels;
+#endif //USE_SDL
 		switch(scrnmng.bpp) {
 #if defined(SUPPORT_16BPP)
 			case 16:
 				p = scrnmng.vram->ptr + (dr.srcpos * 2);
-				q = (BYTE *)surface->pixels + dr.dstpos;
+				q = pixs + dr.dstpos;
 				a = menuvram->alpha + dr.srcpos;
 				salign = menuvram->width;
 				dalign = dr.yalign - (dr.width * dr.xalign);
@@ -261,7 +285,7 @@ const BYTE		*a;
 #if defined(SUPPORT_24BPP)
 			case 24:
 				p = scrnmng.vram->ptr + (dr.srcpos * 3);
-				q = (BYTE *)surface->pixels + dr.dstpos;
+				q = pixs + dr.dstpos;
 				a = menuvram->alpha + dr.srcpos;
 				salign = menuvram->width;
 				dalign = dr.yalign - (dr.width * dr.xalign);
@@ -284,7 +308,7 @@ const BYTE		*a;
 #if defined(SUPPORT_32BPP)
 			case 32:
 				p = scrnmng.vram->ptr + (dr.srcpos * 4);
-				q = (BYTE *)surface->pixels + dr.dstpos;
+				q = pixs + dr.dstpos;
 				a = menuvram->alpha + dr.srcpos;
 				salign = menuvram->width;
 				dalign = dr.yalign - (dr.width * dr.xalign);
@@ -304,21 +328,27 @@ const BYTE		*a;
 #endif
 		}
 	}
+#if defined(USE_SDL)
 	SDL_UnlockSurface(surface);
 	SDL_Flip(surface);
+#endif //USE_SDL
 }
 
-void scrnmng_surfunlock(const SCRNSURF *surf) {
-
+void scrnmng_surfunlock(const SCRNSURF *surf)
+{
+#if defined(USE_SDL)
 	SDL_Surface	*surface;
+#endif //USE_SDL
 
 	if (surf) {
 		if (scrnmng.vram == NULL) {
 			if (scrnmng.surface != NULL) {
+#if defined(USE_SDL)
 				surface = scrnmng.surface;
 				scrnmng.surface = NULL;
 				SDL_UnlockSurface(surface);
 				SDL_Flip(surface);
+#endif //USE_SDL
 			}
 		}
 		else {
@@ -332,14 +362,13 @@ void scrnmng_surfunlock(const SCRNSURF *surf) {
 
 // ----
 
-BOOL scrnmng_entermenu(SCRNMENU *smenu) {
-
+BOOL scrnmng_entermenu(SCRNMENU *smenu)
+{
 	if (smenu == NULL) {
 		goto smem_err;
 	}
 	vram_destroy(scrnmng.vram);
-	scrnmng.vram = vram_create(scrnmng.width, scrnmng.height, FALSE,
-																scrnmng.bpp);
+	scrnmng.vram = vram_create(scrnmng.width, scrnmng.height, FALSE, scrnmng.bpp);
 	if (scrnmng.vram == NULL) {
 		goto smem_err;
 	}
@@ -353,46 +382,54 @@ smem_err:
 	return(FAILURE);
 }
 
-void scrnmng_leavemenu(void) {
-
+void scrnmng_leavemenu(void)
+{
 	VRAM_RELEASE(scrnmng.vram);
 }
 
-void scrnmng_menudraw(const RECT_T *rct) {
-
+void scrnmng_menudraw(const RECT_T *rct)
+{
+#if defined(USE_SDL)
 	SDL_Surface	*surface;
+#endif //USE_SDL
 	DRAWRECT	dr;
-const BYTE		*p;
-const BYTE		*q;
+	const BYTE	*p;
+	const BYTE	*q;
 	BYTE		*r;
 	BYTE		*a;
-	int			salign;
-	int			dalign;
-	int			x;
+	int		salign;
+	int		dalign;
+	int		x;
+	BYTE		*pixs;
 
 	if ((!scrnmng.enable) && (menuvram == NULL)) {
 		return;
 	}
+#if defined(USE_SDL)
 	surface = SDL_GetVideoSurface();
-	if (surface == NULL) {
+	if(surface == NULL) {
 		return;
 	}
 	SDL_LockSurface(surface);
-	if (calcdrawrect(surface, &dr, menuvram, rct) == SUCCESS) {
+#endif //USE_SDL
+	if(calcdrawrect(surface, &dr, menuvram, rct) == SUCCESS) {
+#if defined(USE_SDL)
+		pixs = (BYTE*)surface->pixels;
+#endif //USE_SDL
 		switch(scrnmng.bpp) {
 #if defined(SUPPORT_16BPP)
 			case 16:
 				p = scrnmng.vram->ptr + (dr.srcpos * 2);
 				q = menuvram->ptr + (dr.srcpos * 2);
-				r = (BYTE *)surface->pixels + dr.dstpos;
+				r = pixs + dr.dstpos;
 				a = menuvram->alpha + dr.srcpos;
 				salign = menuvram->width;
 				dalign = dr.yalign - (dr.width * dr.xalign);
 				do {
 					x = 0;
 					do {
-						if (a[x]) {
-							if (a[x] & 2) {
+						if(a[x]) {
+							if(a[x] & 2) {
 								*(UINT16 *)r = *(UINT16 *)(q + (x * 2));
 							}
 							else {
@@ -413,15 +450,15 @@ const BYTE		*q;
 			case 24:
 				p = scrnmng.vram->ptr + (dr.srcpos * 3);
 				q = menuvram->ptr + (dr.srcpos * 3);
-				r = (BYTE *)surface->pixels + dr.dstpos;
+				r = pixs + dr.dstpos;
 				a = menuvram->alpha + dr.srcpos;
 				salign = menuvram->width;
 				dalign = dr.yalign - (dr.width * dr.xalign);
 				do {
 					x = 0;
 					do {
-						if (a[x]) {
-							if (a[x] & 2) {
+						if(a[x]) {
+							if(a[x] & 2) {
 								r[RGB24_B] = q[x*3+0];
 								r[RGB24_G] = q[x*3+1];
 								r[RGB24_R] = q[x*3+2];
@@ -446,15 +483,15 @@ const BYTE		*q;
 			case 32:
 				p = scrnmng.vram->ptr + (dr.srcpos * 4);
 				q = menuvram->ptr + (dr.srcpos * 3);
-				r = (BYTE *)surface->pixels + dr.dstpos;
+				r = pixs + dr.dstpos;
 				a = menuvram->alpha + dr.srcpos;
 				salign = menuvram->width;
 				dalign = dr.yalign - (dr.width * dr.xalign);
 				do {
 					x = 0;
 					do {
-						if (a[x]) {
-							if (a[x] & 2) {
+						if(a[x]) {
+							if(a[x] & 2) {
 								((RGB32 *)r)->p.b = q[x*3+0];
 								((RGB32 *)r)->p.g = q[x*3+1];
 								((RGB32 *)r)->p.r = q[x*3+2];
@@ -476,7 +513,9 @@ const BYTE		*q;
 #endif
 		}
 	}
+#if defined(USE_SDL)
 	SDL_UnlockSurface(surface);
 	SDL_Flip(surface);
+#endif //USE_SDL
 }
 
