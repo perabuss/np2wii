@@ -9,6 +9,7 @@
 #include	<SDL/SDL.h>
 #include	<wiiuse/wiiuse.h>
 #include	<wiiuse/wpad.h>
+#include	<mxml.h>
 
 SDL_Joystick* wiimote1;
 
@@ -16,9 +17,19 @@ SDL_Joystick* wiimote1;
 extern FILE* logfp;
 #endif
 
-#define WIIMOTE_HORI
+extern void MakeLowercase(char *path);
+extern void MakeUppercase(char *path);
 
-#define	CONTROL_COUNT	11
+typedef struct {
+	int	loc;
+	char	*name;
+} control_entries;
+
+#define	CONTROL_COUNT	28
+
+#define MENU_BTN	SDLK_ESCAPE
+
+#define SDLMAPPING(z)	{ SDLK_##z , #z }
 
 int base_control_map[] = {
 	WPAD_BUTTON_UP,
@@ -31,105 +42,412 @@ int base_control_map[] = {
 	WPAD_BUTTON_2,
 	WPAD_BUTTON_MINUS,
 	WPAD_BUTTON_PLUS,
-	WPAD_BUTTON_HOME
+	WPAD_BUTTON_HOME,
+	
+	WPAD_NUNCHUK_BUTTON_Z,
+	WPAD_NUNCHUK_BUTTON_C,
+
+	WPAD_CLASSIC_BUTTON_UP,
+	WPAD_CLASSIC_BUTTON_DOWN,
+	WPAD_CLASSIC_BUTTON_LEFT,
+	WPAD_CLASSIC_BUTTON_RIGHT,
+	WPAD_CLASSIC_BUTTON_A,
+	WPAD_CLASSIC_BUTTON_B,
+	WPAD_CLASSIC_BUTTON_X,
+	WPAD_CLASSIC_BUTTON_Y,
+	WPAD_CLASSIC_BUTTON_ZL,
+	WPAD_CLASSIC_BUTTON_ZR,
+	WPAD_CLASSIC_BUTTON_FULL_L,
+	WPAD_CLASSIC_BUTTON_FULL_R,
+	WPAD_CLASSIC_BUTTON_MINUS,
+	WPAD_CLASSIC_BUTTON_PLUS,
+	WPAD_CLASSIC_BUTTON_HOME,
 };
 
-int vert_wiimote_map[] = {
-	SDLK_UP,
-	SDLK_DOWN,
-	SDLK_LEFT,
-	SDLK_RIGHT,
-	SDLK_z,
-	SDLK_x,
-	SDLK_RETURN,
-	SDLK_SPACE,
-	SDLK_ESCAPE,
-	SDLK_ESCAPE,
-	SDLK_ESCAPE
+const control_entries entrs[] = {
+	/* Wiimote */
+	{  0, "up"	},
+	{  1, "down"	},
+	{  2, "left"	},
+	{  3, "right"	},
+	{  4, "a"	},
+	{  5, "b"	},
+	{  6, "one"	},
+	{  7, "two"	},
+	{  8, "minus"	},
+	{  9, "plus"	},
+	{ 10, "home"	},
+	/* Nunchuk */
+	{ 11, "z"	},
+	{ 12, "c"	},
+	/* Classic Controller */
+	{ 13, "up"	},
+	{ 14, "down"	},
+	{ 15, "left"	},
+	{ 16, "right"	},
+	{ 17, "a"	},
+	{ 18, "b"	},
+	{ 19, "x"	},
+	{ 20, "y"	},
+	{ 21, "zl"	},
+	{ 22, "zr"	},
+	{ 23, "l"	},
+	{ 24, "r"	},
+	{ 25, "minus"	},
+	{ 26, "plus"	},
+	{ 27, "home"	},
 };
 
-int hori_wiimote_map[] = {
-	SDLK_LEFT,
-	SDLK_RIGHT,
-	SDLK_DOWN,
-	SDLK_UP,
-	SDLK_RETURN,
-	SDLK_SPACE,
-	SDLK_z,
-	SDLK_x,
-	SDLK_ESCAPE,
-	SDLK_ESCAPE,
-	SDLK_ESCAPE
+const control_entries sdlmap[] = {
+	SDLMAPPING(z),
+	SDLMAPPING(x),
+	SDLMAPPING(c),
+	SDLMAPPING(v),
+	SDLMAPPING(b),
+	SDLMAPPING(n),
+	SDLMAPPING(m),
+	SDLMAPPING(a),
+	SDLMAPPING(s),
+	SDLMAPPING(d),
+	SDLMAPPING(f),
+	SDLMAPPING(g),
+	SDLMAPPING(h),
+	SDLMAPPING(j),
+	SDLMAPPING(k),
+	SDLMAPPING(l),
+	SDLMAPPING(q),
+	SDLMAPPING(w),
+	SDLMAPPING(e),
+	SDLMAPPING(r),
+	SDLMAPPING(t),
+	SDLMAPPING(y),
+	SDLMAPPING(u),
+	SDLMAPPING(i),
+	SDLMAPPING(o),
+	SDLMAPPING(p),
+	SDLMAPPING(LEFT),
+	SDLMAPPING(RIGHT),
+	SDLMAPPING(DOWN),
+	SDLMAPPING(UP),
+	SDLMAPPING(RETURN),
+	SDLMAPPING(SPACE),
+	SDLMAPPING(ESCAPE),
+	SDLMAPPING(LSHIFT),
+	SDLMAPPING(RSHIFT)
 };
 
+int default_wiimote_map[3][CONTROL_COUNT] = {
+	/* Wiimote (No extensions) */
+	{ 
+	/* Wiimote */
+	  SDLK_LEFT,
+	  SDLK_RIGHT,
+	  SDLK_DOWN,
+	  SDLK_UP,
+	  SDLK_RETURN,
+	  SDLK_SPACE,
+	  SDLK_z,
+	  SDLK_x,
+	  SDLK_ESCAPE,
+	  SDLK_ESCAPE,
+	  MENU_BTN,
+	/* Nunchuk */
+	  0, 0,
+	/* Classic Controller */
+	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	  MENU_BTN },
+	/* Wiimote (+Nunchuk) */
+	{
+	/* Wiimote */
+	  SDLK_UP,
+	  SDLK_DOWN,
+	  SDLK_LEFT,
+	  SDLK_RIGHT,
+	  SDLK_RETURN,
+	  SDLK_SPACE,
+	  SDLK_z,
+	  SDLK_x,
+	  SDLK_ESCAPE,
+	  SDLK_ESCAPE,
+	  MENU_BTN,
+	/* Nunchuk */
+	  SDLK_x,
+	  SDLK_z,
+	/* Classic Controller */
+	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	  MENU_BTN },
+	/* Wiimote (+Classic Controller) */
+	{ 
+	/* Wiimote */
+	  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	  MENU_BTN,
+	/* Nunchuk */
+	  0, 0,
+	/* Classic Controller */
+	  SDLK_UP,
+	  SDLK_DOWN,
+	  SDLK_LEFT, 
+	  SDLK_RIGHT,
+	  SDLK_RETURN, 
+	  SDLK_x, 
+	  SDLK_z, 
+	  SDLK_SPACE, 
+	  SDLK_LSHIFT,
+	  SDLK_RSHIFT, 
+	  SDLK_LSHIFT,
+	  SDLK_RSHIFT, 
+	  SDLK_ESCAPE, 
+	  SDLK_RETURN,
+	  MENU_BTN },
+};
+
+
+int *loaded_wiimote_map[3];
 
 BOOL	task_avail;
 
+char xmlbuff[4096];
 
-void sighandler(int signo) {
+char *                    /* O - Buffer */
+get_value(mxml_node_t *node,        /* I - Node to get */
+	  void        *buffer,        /* I - Buffer */
+	  int         buflen)        /* I - Size of buffer */
+{
+	char        *ptr,            /* Pointer into buffer */
+	*end;            /* End of buffer */
+	int        len;            /* Length of node */
+	mxml_node_t    *current;        /* Current node */
+	
+	
+	ptr = (char*)buffer;
+	end = (char*)buffer + buflen - 1;
+	char tempbuf[4092];
+	current = node->child;
+	for (current = node->child; current && ptr < end; current = current->next)
+	{
+		if (current->type == MXML_TEXT)
+		{
+			if (current->value.text.whitespace)
+				*ptr++ = ' ';
+			
+			len = (int)strlen(current->value.text.string);
+			if (len > (int)(end - ptr))
+				len = (int)(end - ptr);
+			
+			memcpy(ptr, current->value.text.string, len);
+			ptr += len;
+		}
+		else if (current->type == MXML_OPAQUE)
+		{
+			len = (int)strlen(current->value.opaque);
+			if (len > (int)(end - ptr))
+				len = (int)(end - ptr);
+			
+			memcpy(ptr, current->value.opaque, len);
+			ptr += len;
+		}
+		else if (current->type == MXML_INTEGER)
+		{
+			sprintf(tempbuf, "%d", current->value.integer);
+			len = (int)strlen(tempbuf);
+			if (len > (int)(end - ptr))
+				len = (int)(end - ptr);
+			
+			memcpy(ptr, tempbuf, len);
+			ptr += len;
+		}
+		else if (current->type == MXML_REAL)
+		{
+			sprintf(tempbuf, "%f", current->value.real);
+			len = (int)strlen(tempbuf);
+			if (len > (int)(end - ptr))
+				len = (int)(end - ptr);
+			
+			memcpy(ptr, tempbuf, len);
+			ptr += len;
+		}
+	}
+	*ptr = 0;
+	return buffer;
+}
 
+const char *whitespace_cb(mxml_node_t *node, int where)
+{
+	/* code by Matt_P */
+	const char *name = node->value.element.name;
+	mxml_node_t * temp = node;
+	int depth = 0;
+	while(temp){
+		depth++;
+		temp = temp->parent;
+	}
+	if (where == 3 || where == 1){
+		return "";
+	}else if(((node->prev && where == 0) || node->parent) && !(where == 2 && strncmp(name, "ua", 2) && strcmp(name, "flip") && strcmp(name, "zoom") && strcmp(name, "coords") && strcmp(name, "entries") && strcmp(name, "xmlyt") && strcmp(name, "xmlan") && strcmp(name, "entries") && strcmp(name, "triplet") && strcmp(name, "pair") && strcmp(name, "entry") && strcmp(name, "pane") && (strcmp(name, "tag") && strcmp(name, "size") && strcmp(name, "material") && strcmp(name, "colors") && strcmp(name, "subs") && strcmp(name, "font") && strcmp(name, "wnd4") && strcmp(name, "wnd4mat") && strcmp(name, "set") && strcmp(name, "coordinates"))) ){
+		sprintf(xmlbuff, "\n%*s",  (depth-1)*4, "");
+    }else{
+        return "";
+    }
+    return xmlbuff;
+}
+
+int FIND_SDL_ENTRY(char *x)
+{
+	int y;
+	for(y = 0; y < 35; y++) {
+		if(strcmp(sdlmap[y].name, x) == 0) {
+			return sdlmap[y].loc;
+		}
+	}
+	return 0;
+}
+
+void LOAD_WIIMOTE_FROM_XML(control_entries x, int y, mxml_node_t* z)
+{
+	char a[256];
+	mxml_node_t *tempnode = mxmlFindElement(z, z, x.name, NULL, NULL, MXML_DESCEND);
+	if(tempnode == NULL) {
+		printf("No element <%s>\n", x.name);
+		loaded_wiimote_map[y][x.loc] = default_wiimote_map[y][x.loc];
+                return;
+	}
+	get_value(tempnode, a, 256);
+	
+	MakeUppercase(a);
+	if((isalpha(a[0])) && (a[1] == '\0')){
+		MakeLowercase(a);
+	}
+	loaded_wiimote_map[y][x.loc] = FIND_SDL_ENTRY(a);
+}
+
+void LoadWiimoteMapping()
+{
+	FILE* fp = fopen("sd:/PC98/DATA/control.xml", "rb");
+	log_console_enable_video(1);
+	if(fp == NULL) {
+		printf("Unable to open config, using defaults\n");
+		/* We don't have a Config file available then! */
+		return;
+	}
+	mxml_node_t *hightree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
+	if(hightree == NULL) {
+		/* Couldn't open hightree! */
+		return;
+	}
+	mxml_node_t *tree = mxmlFindElement(hightree, hightree, "controls", NULL, NULL, MXML_DESCEND);
+	if(hightree == NULL) {
+		/* Couldn't get tree! */
+		return;
+	}
+	mxml_node_t *node;
+	mxml_node_t *subnode;
+	int i;
+	/* Wiimote portion */
+	node = mxmlFindElement(tree, tree, "wiimote", NULL, NULL, MXML_DESCEND);
+	if(node != NULL) {
+		for(i = 0; i < 10; i++) {
+			LOAD_WIIMOTE_FROM_XML(entrs[i], 0, node);
+		}
+	}
+	/* Wiimote+Nunchuk portion */
+	node = mxmlFindElement(tree, tree, "nunchuk", NULL, NULL, MXML_DESCEND);
+	if(node != NULL) {
+		subnode = mxmlFindElement(node, node, "wiimote", NULL, NULL, MXML_DESCEND);
+		if(subnode != NULL) {
+			for(i = 0; i < 10; i++) {
+				LOAD_WIIMOTE_FROM_XML(entrs[i], 1, subnode);
+			}
+		}
+		for(i = 11; i < 13; i++) {
+			LOAD_WIIMOTE_FROM_XML(entrs[i], 1, node);
+		}
+	}
+	/* Wiimote+Classic portion */
+	node = mxmlFindElement(tree, tree, "classic", NULL, NULL, MXML_DESCEND);
+	if(node != NULL) {
+		subnode = mxmlFindElement(node, node, "wiimote", NULL, NULL, MXML_DESCEND);
+		if(subnode == NULL) {
+			memcpy(loaded_wiimote_map[2], default_wiimote_map[2], 10 * sizeof(int));
+		}else{
+			for(i = 0; i < 10; i++) {
+				LOAD_WIIMOTE_FROM_XML(entrs[i], 2, subnode);
+			}
+		}
+		for(i = 13; i < (CONTROL_COUNT - 1); i++) {
+			LOAD_WIIMOTE_FROM_XML(entrs[i], 2, node);
+		}
+		loaded_wiimote_map[2][11] = loaded_wiimote_map[2][13];
+		loaded_wiimote_map[2][12] = loaded_wiimote_map[2][15];
+	}
+}
+
+void sighandler(int signo)
+{
 	(void)signo;
 	task_avail = FALSE;
 }
 
-
-void taskmng_initialize(void) {
+void taskmng_initialize()
+{
 	task_avail = TRUE;
+	log_console_enable_video(1);
+	printf("\x1B[J\n\n");
+	printf("Loading controller config from SD:/PC98/DATA/control.xml...\n");
+	loaded_wiimote_map[0] = calloc(CONTROL_COUNT, sizeof(int));
+	loaded_wiimote_map[1] = calloc(CONTROL_COUNT, sizeof(int));
+	loaded_wiimote_map[2] = calloc(CONTROL_COUNT, sizeof(int));
+	memcpy(loaded_wiimote_map[0], default_wiimote_map[0], CONTROL_COUNT * sizeof(int));
+	memcpy(loaded_wiimote_map[1], default_wiimote_map[1], CONTROL_COUNT * sizeof(int));
+	memcpy(loaded_wiimote_map[2], default_wiimote_map[2], CONTROL_COUNT * sizeof(int));
+	LoadWiimoteMapping();
+	printf("Loaded config...\n");
+	sleep(1);
+	printf("\x1B[J\n\n");
+	log_console_enable_video(0);
 }
 
-void taskmng_exit(void) {
-
+void taskmng_exit()
+{
 	task_avail = FALSE;
 }
 
-UINT8 hatsdown = 0;
 UINT32 buttonsdown = 0;
 
-void taskmng_rol(void) {
+void taskmng_rol()
+{
 	UINT32 buttons = 0;
+	struct expansion_t ext;
 	WPAD_ScanPads();
-	u32 btn = WPAD_ButtonsDown(0) | WPAD_ButtonsHeld(0);
-	// UP button
-	if(btn & WPAD_BUTTON_UP)	buttons |= base_control_map[0];
-	// DOWN button
-	if(btn & WPAD_BUTTON_DOWN)	buttons |= base_control_map[1];
-	// LEFT button
-	if(btn & WPAD_BUTTON_LEFT)	buttons |= base_control_map[2];
-	// RIGHT button
-	if(btn & WPAD_BUTTON_RIGHT)	buttons |= base_control_map[3];
-
-	// A button
-	if(btn & WPAD_BUTTON_A)		buttons |= base_control_map[4];
-	// B button
-	if(btn & WPAD_BUTTON_B)		buttons |= base_control_map[5];
-	// 1 button
-	if(btn & WPAD_BUTTON_1)		buttons |= base_control_map[6];
-	// 2 button
-	if(btn & WPAD_BUTTON_2)		buttons |= base_control_map[7];
-	// MINUS button
-	if(btn & WPAD_BUTTON_MINUS)	buttons |= base_control_map[8];
-	// PLUS button
-	if(btn & WPAD_BUTTON_PLUS)	buttons |= base_control_map[9];
-	// HOME button
-	if(btn & WPAD_BUTTON_HOME)	buttons |= base_control_map[10];
-	int idx = 0;
-	int* controlmap = vert_wiimote_map;
-#ifdef WIIMOTE_HORI
-	controlmap = hori_wiimote_map;
-#endif
+	WPAD_Expansion(WPAD_CHAN_0, &ext);
+	u32 btn = WPAD_ButtonsDown(WPAD_CHAN_0) | WPAD_ButtonsHeld(WPAD_CHAN_0);
+	buttons = btn;
+	int idx;
+	int type;
+	switch(ext.type) {
+		case WPAD_EXP_NUNCHUK:
+			type = 1;
+			break;
+		case WPAD_EXP_CLASSIC:
+			type = 2;
+			break;
+		default:
+			type = 0;
+			break;
+	}
+	
 	for(idx = 0; idx < CONTROL_COUNT; idx++) {
 		if((buttons & (base_control_map[idx])) && (!(buttonsdown & (base_control_map[idx])))) {
-			sdlkbd_keydown(controlmap[idx]);
+			sdlkbd_keydown(loaded_wiimote_map[type][idx]);
 			buttonsdown |= base_control_map[idx];
 		}else if((!(buttons & (base_control_map[idx]))) && (buttonsdown & (base_control_map[idx]))) {
-			sdlkbd_keyup(controlmap[idx]);
+			sdlkbd_keyup(loaded_wiimote_map[type][idx]);
 			buttonsdown &= ~(base_control_map[idx]);
 		}
 	}
 }
 
-BOOL taskmng_sleep(UINT32 tick) {
-
+BOOL taskmng_sleep(UINT32 tick)
+{
 	UINT32	base;
 
 	base = GETTICK();

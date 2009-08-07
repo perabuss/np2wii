@@ -2,8 +2,8 @@
 	<app version="1">
 	<name>Neko Project II Wii</name>
 	<coder>SquidMan</coder>
-	<version>0.1</version>
-	<release_date>09/08/06</release_date>
+	<version>0.1B2</version>
+	<release_date>09/08/07</release_date>
 	<short_description>PC-9801 Emulator for Wii</short_description>
 	<long_description>Neko Project II Wii is a port of Neko Project II. Neko Project II was originally written by YUI.
 

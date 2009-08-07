@@ -30,7 +30,7 @@ extern FILE* logfp;
 #endif
 
 #define WIIMOTE_HORI
-#define HEIGHT_BEGIN 	4
+#define HEIGHT_BEGIN 	3
 #define MAX_ENTRIES	20
 #define	CONTROL_COUNT	11
 
@@ -73,6 +73,15 @@ void MakeLowercase(char *path)
 	int len = strlen(path);
 	for(i = 0; i < len; i++) {
 		path[i] = tolower(path[i]);
+	}
+}
+
+void MakeUppercase(char *path)
+{
+	int i;
+	int len = strlen(path);
+	for(i = 0; i < len; i++) {
+		path[i] = toupper(path[i]);
 	}
 }
 
@@ -366,7 +375,7 @@ load_entry wiimenu_choosefromlist(gamelistentry *gamesunk, gamelistentry *gamesf
 		
 		if(redraw) {
 			printf("\x1b[J");
-			printf("\x1b[%d;0HLoad %s.\nPress 1 to change device.\n", HEIGHT_BEGIN - 2, devices[devnum]);
+			printf("\x1b[%d;0HLoad %s. Press 1 to change device.\n\n", HEIGHT_BEGIN - 1, devices[devnum]);
 			i = 0;
 			// position == real  location
 			// cur_off  == arrow location
@@ -414,37 +423,50 @@ void wiimenu_loadgame()
 	gamelistentry gamesunk[20];
 	gamelistentry gamesfdd[20];
 	gamelistentry gameshdd[20];
+	int loaded = 0;
 	log_console_enable_video(1);
 	int* listcnt = wiimenu_buildgamelist("sd:/PC98/ROMS/", list, 20, gamesunk, gamesfdd, gameshdd);
-	printf("%d Unknown Files\n%d FDD Images\n%d HDD Images\n", listcnt[BASETYPE_UNKNOWN], listcnt[BASETYPE_FDD], listcnt[BASETYPE_HDD]);
+	printf("\x1b[J\n\n");
+	printf("Found:\n%d Unknown Files\n%d FDD Images\n%d HDD Images\n", listcnt[BASETYPE_UNKNOWN], listcnt[BASETYPE_FDD], listcnt[BASETYPE_HDD]);
 	sleep(1);
-	load_entry selected = wiimenu_choosefromlist(gamesunk, gamesfdd, gameshdd, listcnt);
-	printf("\x1b[J");
-	if(selected.hdd0 != NULL) {
-		printf("Loading %s into HDD0.\n", selected.hdd0);
-		diskdrv_sethdd(0x00, selected.hdd0);
-		sleep(1);
+	while(!loaded) {
+		load_entry selected = wiimenu_choosefromlist(gamesunk, gamesfdd, gameshdd, listcnt);
+		printf("\x1b[J\n\n");
+		if(selected.hdd0 != NULL) {
+			printf("Loading %s into HDD0.\n", selected.hdd0);
+			diskdrv_sethdd(0x00, selected.hdd0);
+			free(selected.hdd0);
+			sleep(1);
+			loaded = 1;
+		}
+		if(selected.hdd1 != NULL) {
+			printf("Loading %s into HDD1.\n", selected.hdd1);
+			diskdrv_sethdd(0x01, selected.hdd1);
+			free(selected.hdd1);
+			sleep(1);
+			loaded = 1;
+		}
+		if(selected.fdd0 != NULL) {
+			printf("Loading %s into FDD0.\n", selected.fdd0);
+			diskdrv_setfdd(0x00, selected.fdd0, 0);
+			free(selected.fdd0);
+			sleep(1);
+			loaded = 1;
+		}
+		if(selected.fdd0 != NULL) {
+			printf("Loading %s into FDD1.\n", selected.fdd1);
+			diskdrv_setfdd(0x01, selected.fdd1, 0);
+			free(selected.fdd1);
+			sleep(1);
+			loaded = 1;
+		}
+		if(!loaded) {
+			printf("ERROR: No disks loaded! Please choose a disk!\n");
+			sleep(1);
+		}
 	}
-	if(selected.hdd1 != NULL) {
-		printf("Loading %s into HDD1.\n", selected.hdd1);
-		diskdrv_sethdd(0x01, selected.hdd1);
-		sleep(1);
-	}
-	if(selected.fdd0 != NULL) {
-		printf("Loading %s into FDD0.\n", selected.fdd0);
-		diskdrv_setfdd(0x00, selected.fdd0, 0);
-		sleep(1);
-	}
-	if(selected.fdd0 != NULL) {
-		printf("Loading %s into FDD1.\n", selected.fdd1);
-		diskdrv_setfdd(0x01, selected.fdd1, 0);
-		sleep(1);
-	}
+	sleep(1);
 	log_console_enable_video(0);
-	free(selected.hdd0);
-	free(selected.hdd1);
-	free(selected.fdd0);
-	free(selected.fdd1);
 	free(listcnt);
 }
 
