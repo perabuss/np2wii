@@ -12,7 +12,6 @@
 
 SDL_Joystick* wiimote1;
 
-#define DEBUG_NP2
 #ifdef DEBUG_NP2
 extern FILE* logfp;
 #endif
@@ -90,8 +89,7 @@ void taskmng_rol(void) {
 	UINT32 buttons = 0;
 	WPAD_ScanPads();
 	u32 btn = WPAD_ButtonsDown(0) | WPAD_ButtonsHeld(0);
-	buttons = btn;
-/*	// UP button
+	// UP button
 	if(btn & WPAD_BUTTON_UP)	buttons |= base_control_map[0];
 	// DOWN button
 	if(btn & WPAD_BUTTON_DOWN)	buttons |= base_control_map[1];
@@ -113,7 +111,7 @@ void taskmng_rol(void) {
 	// PLUS button
 	if(btn & WPAD_BUTTON_PLUS)	buttons |= base_control_map[9];
 	// HOME button
-	if(btn & WPAD_BUTTON_HOME)	buttons |= base_control_map[10];*/
+	if(btn & WPAD_BUTTON_HOME)	buttons |= base_control_map[10];
 	int idx = 0;
 	int* controlmap = vert_wiimote_map;
 #ifdef WIIMOTE_HORI
@@ -123,7 +121,7 @@ void taskmng_rol(void) {
 		if((buttons & (base_control_map[idx])) && (!(buttonsdown & (base_control_map[idx])))) {
 			sdlkbd_keydown(controlmap[idx]);
 			buttonsdown |= base_control_map[idx];
-		}else if(buttonsdown & (base_control_map[idx])) {
+		}else if((!(buttons & (base_control_map[idx]))) && (buttonsdown & (base_control_map[idx]))) {
 			sdlkbd_keyup(controlmap[idx]);
 			buttonsdown &= ~(base_control_map[idx]);
 		}

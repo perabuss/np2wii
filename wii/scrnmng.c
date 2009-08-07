@@ -45,6 +45,8 @@ typedef struct {
 	int		dstpos;
 } DRAWRECT;
 
+// Centers the screen
+#define SCREEN_OFFSET	40
 
 #if defined(USE_SDL)
 static BOOL calcdrawrect(SDL_Surface *surface, DRAWRECT *dr, VRAMHDL s, const RECT_T *rt)
@@ -206,7 +208,7 @@ SCRNSURF *scrnmng_surflock(void)
 #if defined(USE_SDL)
 		SDL_LockSurface(surface);
 		scrnmng.surface = surface;
-		scrnsurf.ptr = (BYTE *)surface->pixels;
+		scrnsurf.ptr = ((BYTE*)surface->pixels) + (SCREEN_OFFSET * surface->pitch);
 		scrnsurf.xalign = surface->format->BytesPerPixel;
 		scrnsurf.yalign = surface->pitch;
 		scrnsurf.bpp = surface->format->BitsPerPixel;
@@ -258,7 +260,7 @@ static void draw_onmenu(void)
 #endif //USE_SDL
 	if (calcdrawrect(surface, &dr, menuvram, &rt) == SUCCESS) {
 #if defined(USE_SDL)
-		pixs = (BYTE*)surface->pixels;
+		pixs = ((BYTE*)surface->pixels) + (SCREEN_OFFSET * surface->pitch);
 #endif //USE_SDL
 		switch(scrnmng.bpp) {
 #if defined(SUPPORT_16BPP)
@@ -414,7 +416,7 @@ void scrnmng_menudraw(const RECT_T *rct)
 #endif //USE_SDL
 	if(calcdrawrect(surface, &dr, menuvram, rct) == SUCCESS) {
 #if defined(USE_SDL)
-		pixs = (BYTE*)surface->pixels;
+		pixs = ((BYTE*)surface->pixels) + (SCREEN_OFFSET * surface->pitch);
 #endif //USE_SDL
 		switch(scrnmng.bpp) {
 #if defined(SUPPORT_16BPP)

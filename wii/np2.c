@@ -27,12 +27,12 @@
 #include	"sysmenu.h"
 #include	"menu.h"
 
+#include	"log_console.h"
 #include	<ogc/pad.h>
 #include	<wiiuse/wpad.h>
 #include	<fat.h>
 #include	<SDL/SDL.h>
 #include	<SDL/SDL_ttf.h>
-
 
 
 #ifdef DEBUG_NP2
@@ -129,12 +129,13 @@ static void processwait(UINT cnt) {
 static void wii_load_game()
 {
 	wiimenu_loadgame();
-	//diskdrv_sethdd(0x00, "sd:/PC98/ROMS/test.hdi");		// Load the first SASI/IDE drive.
 }
 
 void wii_shutdown(s32 chan)
 {
 	WPAD_Disconnect(WPAD_CHAN_ALL);
+	log_console_enable_video(0);
+	log_console_deinit();
 	taskmng_exit();
 }
 
@@ -147,10 +148,10 @@ static void wii_initialize()
 	WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
 }
 
-int main(int argc, char **argv) {
-
+int main(int argc, char **argv)
+{
 	int		pos;
-	char	*p;
+	char		*p;
 	int		id;
 
 	wii_initialize();
@@ -158,23 +159,9 @@ int main(int argc, char **argv) {
 	logfp = fopen("sd:/log.txt", "wb");
 	if(logfp == NULL) {
 		printf("Can't open logfile.\n");
-		sleep(5);
 		exit(1);
 	}
 #endif //DEBUG_NP2
-
-	pos = 1;
-	while(pos < argc) {
-		p = argv[pos++];
-		if ((!milstr_cmp(p, "-h")) || (!milstr_cmp(p, "--help"))) {
-			usage(argv[0]);
-			goto np2main_err1;
-		}
-		else {
-			printf("error command: %s\n", p);
-			goto np2main_err1;
-		}
-	}
 
 	dosio_init();
 	file_setcd(datadir);
@@ -195,7 +182,6 @@ int main(int argc, char **argv) {
 	}
 	wiimenu_initialize();
 	
-	wii_load_game();
 	soundmng_initialize();
 	commng_initialize();
 	sysmng_initialize();
@@ -206,6 +192,7 @@ int main(int argc, char **argv) {
 	S98_init();
 
 	scrndraw_redraw();
+	wii_load_game();
 	pccore_reset();
 
 	if (np2oscfg.resume) {

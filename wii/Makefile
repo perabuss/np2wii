@@ -57,7 +57,7 @@ NORMFLAGS	=	-g -Wall $(MACHDEP) $(INCLUDE)
 OPTIMALFLAGS	=	-O3 -g -Wall $(MACHDEP) $(INCLUDE) -falign-loops=16 -falign-jumps=16 \
 			-falign-functions=16 -malign-natural -ffast-math -fstrict-aliasing \
 			-funroll-loops -ftree-loop-linear -fsched-interblock -fgcse-sm
-CFLAGS		=	$(OPTIMALFLAGS)
+CFLAGS		=	$(OPTIMALFLAGS) -DDEBUG_NP2
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS		=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
