@@ -35,6 +35,30 @@
 #include	<SDL/SDL_ttf.h>
 
 
+typedef struct bmphead
+{
+	UINT16		magic;			// 0x42 0x4D (ASCII for `BM')
+	UINT32		size;			// The size of the file
+	UINT16		reserved1;		// Reserved. (We'll stuff `TP' here)
+	UINT16		reserved2;		// Reserved. (We'll stuff `LB' here)
+	UINT32		offset;			// Offset to actual bitmap.
+} BMPHeader;
+
+typedef struct bmpv3infohead
+{
+	UINT32		headersize;		// Size of this header (40 bytes)
+	SINT32		width;			// Width in pixels.
+	SINT32		height;			// Height in pixels.
+	UINT16		colorplanes;		// Number of color planes. Always 1.
+	UINT16		bpp;			// Bits per pixel.
+	UINT32		compression;		// Compression method. Just use 0, kthx.
+	UINT32		bitmapsize;		// Size of the bitmap itself.
+	UINT32		hres;			// Horizontal resolution. Just use 0, kthx.
+	UINT32		vres;			// Vertical resolution. Just use 0, kthx.
+	UINT32		colorpalette;		// Number of colors in palette. Just use 0, kthx.
+	UINT32		importantcolors;	// Number of important colors. Just use 0, kthx.
+} BMPInfoHeaderV3;
+
 #ifdef DEBUG_NP2
 FILE* logfp;
 #endif //DEBUG_NP2
@@ -42,17 +66,12 @@ FILE* logfp;
 static	UINT		framecnt;
 static	UINT		waitcnt;
 static	UINT		framemax = 1;
-static	char		datadir[MAX_PATH] = "./";
+static	char		datadir[MAX_PATH] = "sd:/PC98/DATA/";
 
+int time_to_leave = 0;
+int softret = 1;
 
 extern void wiimenu_loadgame();
-
-static void usage(const char *progname) {
-
-	printf("Usage: %s [options]\n", progname);
-	printf("\t--help   [-h]       : print this message\n");
-}
-
 
 // ---- resume
 
@@ -126,17 +145,36 @@ static void processwait(UINT cnt) {
 	}
 }
 
-static void wii_load_game()
-{
-	wiimenu_loadgame();
-}
-
 void wii_shutdown(s32 chan)
 {
 	WPAD_Disconnect(WPAD_CHAN_ALL);
 	log_console_enable_video(0);
 	log_console_deinit();
 	taskmng_exit();
+	time_to_leave = 1;
+	if(chan == 9001) {
+		softret = 1;
+	}
+}
+
+void wii_shutdown_power()
+{
+	WPAD_Disconnect(WPAD_CHAN_ALL);
+	log_console_enable_video(0);
+	log_console_deinit();
+	taskmng_exit();
+	time_to_leave = 1;
+	softret = 1;
+}
+
+void wii_screenshot()
+{
+	SCRNSURF *scrn = scrnmng_surflock();
+	FILE* out = fopen("sd:/scrn.bmp", "wb");
+	fwrite(scrn->ptr, scrn->width * scrn->height * scrn->xalign, 1, out);
+	fflush(out);
+	fclose(out);
+	scrnmng_surfunlock(scrn);
 }
 
 static void wii_initialize()
@@ -146,12 +184,12 @@ static void wii_initialize()
 	WPAD_Init();
 	WPAD_SetPowerButtonCallback(wii_shutdown);
 	WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC_IR);
+	SYS_SetPowerCallback(wii_shutdown_power);
+	SYS_SetResetCallback(wii_screenshot);
 }
 
 int main(int argc, char **argv)
 {
-	int		pos;
-	char		*p;
 	int		id;
 
 	wii_initialize();
@@ -162,7 +200,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 #endif //DEBUG_NP2
-
+	np2cfg.dipsw[1] |= 1 << 7;
 	dosio_init();
 	file_setcd(datadir);
 	initload();
@@ -186,13 +224,13 @@ int main(int argc, char **argv)
 	commng_initialize();
 	sysmng_initialize();
 	taskmng_initialize();
-	strcpy(np2cfg.fontfile, "sd:/PC98/DATA/font.bmp");
-//	strcpy(np2cfg.biospath, "sd:/PC98/BIOS/");
+	strcpy(np2cfg.fontfile, file_getcd("font.bmp"));
 	pccore_init();
 	S98_init();
 
 	scrndraw_redraw();
-	wii_load_game();
+	wiimenu_menu();
+	log_console_enable_video(0);
 	pccore_reset();
 
 	if (np2oscfg.resume) {
@@ -201,9 +239,6 @@ int main(int argc, char **argv)
 			goto np2main_err5;
 		}
 	}
-//	np2oscfg.DRAW_SKIP = 4;
-//	np2oscfg.NOWAIT = 1;
-	np2oscfg.NOWAIT = 0;
 	while(taskmng_isavail()) {
 		taskmng_rol();
 		if (np2oscfg.NOWAIT) {
@@ -285,6 +320,9 @@ int main(int argc, char **argv)
 #ifdef DEBUG_NP2
 	fprintf(logfp, "FINISHED!\n");
 #endif //DEBUG_NP2
+	if(softret) {
+		SYS_ResetSystem(SYS_RETURNTOMENU, 0, 0);
+	}
 	return(SUCCESS);
 
 np2main_err5:
@@ -309,10 +347,6 @@ np2main_err2:
 	SDL_Quit();
 	dosio_term();
 
-np2main_err1:
-#ifdef DEBUG_NP2
-	fprintf(logfp, "Error 1!\n");
-#endif //DEBUG_NP2
 	return(FAILURE);
 }
 

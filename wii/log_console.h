@@ -28,7 +28,7 @@ distribution.
 
 #include <gccore.h>
 
-void log_console_init(GXRModeObj *vmode, u16 logsize);
+void log_console_init(GXRModeObj *vmode, u16 logsize, u16 x, u16 y, u16 w, u16 h);
 void log_console_deinit(void);
 void log_console_enable_log(bool enable);
 void log_console_enable_video(bool enable);

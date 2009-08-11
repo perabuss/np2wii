@@ -88,10 +88,11 @@ const devoptab_t dot_out = {
 	NULL		// device statvfs_r
 };
 
-void log_console_init(GXRModeObj *vmode, u16 logsize) {
+void log_console_init(GXRModeObj *vmode, u16 logsize, u16 x, u16 y, u16 w, u16 h)
+{
 	u16 i;
 
-	CON_InitEx(vmode, 20, 30, vmode->fbWidth - 40, vmode->xfbHeight - 60);
+	CON_InitEx(vmode, x, y, w, h);
 	rcb = VIDEO_SetPostRetraceCallback(NULL);
 	VIDEO_SetPostRetraceCallback(rcb);
 

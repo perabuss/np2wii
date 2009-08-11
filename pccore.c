@@ -331,7 +331,9 @@ void pccore_reset(void) {
 	}
 
 	// HDDセット
+#ifndef HW_RVL
 	diskdrv_hddbind();
+#endif //!HW_RVL
 	// SASI/IDEどっち？
 #if defined(SUPPORT_SASI)
 	if (sxsi_issasi()) {

@@ -217,15 +217,13 @@ static void setbiosseed(UINT8 *ptr, UINT size, UINT seedpos) {
 void bios_initialize(void) {
 
 	BOOL	biosrom;
-	OEMCHAR	path[MAX_PATH];
 	FILEH	fh;
 	UINT	i;
 	UINT32	tmp;
 	UINT	pos;
 
 	biosrom = FALSE;
-//	getbiospath(path, str_biosrom, NELEMENTS(path));
-	fh = file_open_rb("sd:/PC98ROM/BIOS/bios.rom");
+	fh = file_open_rb(file_getcd("bios.rom"));
 	if (fh != FILEH_INVALID) {
 		biosrom = (file_read(fh, mem + 0x0e8000, 0x18000) == 0x18000);
 		file_close(fh);
@@ -255,8 +253,7 @@ void bios_initialize(void) {
 	}
 
 #if defined(SUPPORT_PC9821)
-	getbiospath(path, OEMTEXT("bios9821.rom"), sizeof(path));
-	fh = file_open_rb(path);
+	fh = file_open_rb(file_getcd("bios9821.rom"));
 	if (fh != FILEH_INVALID) {
 		if (file_read(fh, mem + 0x0d8000, 0x2000) == 0x2000) {
 			// IDE BIOS‚ð’×‚·
@@ -310,7 +307,7 @@ void bios_initialize(void) {
 	}
 	setbiosseed(mem + 0x0f8000, 0x08000, 0x7ffe);
 #else
-	fh = file_open_c("sd:/PC98ROM/BIOS/itf.rom");
+	fh = file_open_c(file_getcd("itf.rom"));
 	if (fh != FILEH_INVALID) {
 		file_read(fh, mem + ITF_ADRS, 0x8000);
 		file_close(fh);

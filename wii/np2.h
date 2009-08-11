@@ -15,3 +15,5 @@ enum {
 };
 
 extern	NP2OSCFG	np2oscfg;
+
+void wii_shutdown(s32 chan);

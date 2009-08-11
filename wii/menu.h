@@ -8,3 +8,5 @@
  */
 
 void wiimenu_initialize();
+void wiimenu_menu();
+void BorderOverlay();

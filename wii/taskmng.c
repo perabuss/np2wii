@@ -6,6 +6,10 @@
 #include	"vramhdl.h"
 #include	"menubase.h"
 #include	"sysmenu.h"
+#include	"dosio.h"
+#include	"log_console.h"
+#include	"menu.h"
+
 #include	<SDL/SDL.h>
 #include	<wiiuse/wiiuse.h>
 #include	<wiiuse/wpad.h>
@@ -27,7 +31,7 @@ typedef struct {
 
 #define	CONTROL_COUNT	28
 
-#define MENU_BTN	SDLK_ESCAPE
+#define MENU_BTN	(9001)
 
 #define SDLMAPPING(z)	{ SDLK_##z , #z }
 
@@ -307,7 +311,6 @@ void LOAD_WIIMOTE_FROM_XML(control_entries x, int y, mxml_node_t* z)
 	char a[256];
 	mxml_node_t *tempnode = mxmlFindElement(z, z, x.name, NULL, NULL, MXML_DESCEND);
 	if(tempnode == NULL) {
-		printf("No element <%s>\n", x.name);
 		loaded_wiimote_map[y][x.loc] = default_wiimote_map[y][x.loc];
                 return;
 	}
@@ -322,10 +325,9 @@ void LOAD_WIIMOTE_FROM_XML(control_entries x, int y, mxml_node_t* z)
 
 void LoadWiimoteMapping()
 {
-	FILE* fp = fopen("sd:/PC98/DATA/control.xml", "rb");
-	log_console_enable_video(1);
+	FILE* fp = fopen(file_getcd("control.xml"), "rb");
 	if(fp == NULL) {
-		printf("Unable to open config, using defaults\n");
+		printf("  Unable to open config, using defaults\n");
 		/* We don't have a Config file available then! */
 		return;
 	}
@@ -390,9 +392,8 @@ void sighandler(int signo)
 void taskmng_initialize()
 {
 	task_avail = TRUE;
-	log_console_enable_video(1);
 	printf("\x1B[J\n\n");
-	printf("Loading controller config from SD:/PC98/DATA/control.xml...\n");
+	printf("  Loading controller config from %s...\n", file_getcd("control.xml"));
 	loaded_wiimote_map[0] = calloc(CONTROL_COUNT, sizeof(int));
 	loaded_wiimote_map[1] = calloc(CONTROL_COUNT, sizeof(int));
 	loaded_wiimote_map[2] = calloc(CONTROL_COUNT, sizeof(int));
@@ -400,10 +401,9 @@ void taskmng_initialize()
 	memcpy(loaded_wiimote_map[1], default_wiimote_map[1], CONTROL_COUNT * sizeof(int));
 	memcpy(loaded_wiimote_map[2], default_wiimote_map[2], CONTROL_COUNT * sizeof(int));
 	LoadWiimoteMapping();
-	printf("Loaded config...\n");
+	printf("  Loaded config...\n");
+	BorderOverlay();
 	sleep(1);
-	printf("\x1B[J\n\n");
-	log_console_enable_video(0);
 }
 
 void taskmng_exit()
@@ -437,11 +437,17 @@ void taskmng_rol()
 	
 	for(idx = 0; idx < CONTROL_COUNT; idx++) {
 		if((buttons & (base_control_map[idx])) && (!(buttonsdown & (base_control_map[idx])))) {
-			sdlkbd_keydown(loaded_wiimote_map[type][idx]);
-			buttonsdown |= base_control_map[idx];
+			if(loaded_wiimote_map[type][idx] == MENU_BTN) {
+				wiimenu_menu();
+			}else{
+				sdlkbd_keydown(loaded_wiimote_map[type][idx]);
+				buttonsdown |= base_control_map[idx];
+			}
 		}else if((!(buttons & (base_control_map[idx]))) && (buttonsdown & (base_control_map[idx]))) {
-			sdlkbd_keyup(loaded_wiimote_map[type][idx]);
-			buttonsdown &= ~(base_control_map[idx]);
+			if(loaded_wiimote_map[type][idx] != MENU_BTN) {
+				sdlkbd_keyup(loaded_wiimote_map[type][idx]);
+				buttonsdown &= ~(base_control_map[idx]);
+			}
 		}
 	}
 }
