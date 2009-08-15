@@ -42,7 +42,8 @@ typedef struct {
 BOOL fontmng_init(void) {
 
 	if (TTF_Init() < 0) {
-		fprintf(stderr, "Couldn't initialize TTF: %s\n", SDL_GetError());
+		printf("Couldn't initialize TTF: %s\n", SDL_GetError());
+		sleep(5);
 		return(FAILURE);
 	}
 #ifndef WIN32
@@ -106,9 +107,8 @@ void *fontmng_create(int size, UINT type, const char *fontface) {
 	ret->fontalign = fontalign;
 	ret->ttf_font = TTF_OpenFont(fontname, ptsize);
 	if (ret->ttf_font == NULL) {
-		fprintf(stderr, "Couldn't load %d points font from %s: %s\n",
-				ptsize, fontname, SDL_GetError());
-		sleep(2);
+		printf("Couldn't load %d points font from %s: %s\n", ptsize, fontname, SDL_GetError());
+		sleep(5);
 		goto fmc_err2;
 	}
 	return(ret);

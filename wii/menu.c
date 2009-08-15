@@ -14,10 +14,8 @@
 #include	"sdlkbd.h"
 #include	"vramhdl.h"
 #include	"menu.h"
-#include	"sysmenu.h"
 #include	"diskdrv.h"
 #include	"scrnmng.h"
-#include	"menubase.h"
 #include	"pccore.h"
 #include	"keystat.h"
 #include	"sysmng.h"
@@ -26,7 +24,6 @@
 #include	"iocore.h"
 
 #include	<SDL/SDL.h>
-#include	"SFont.h"
 #include	<fat.h>
 #include	<dirent.h>
 #include	"log_console.h"
@@ -59,8 +56,6 @@ extern FILE* logfp;
 extern int base_control_map[];
 extern int vert_wiimote_map[];
 extern int hori_wiimote_map[];
-
-extern void sys_cmd(MENUID id);
 
 int started = 0;
 
@@ -196,9 +191,10 @@ int* wiimenu_buildgamelist(char* root, gamelistentry* gamelist, int max, \
 	dirIter = diropen(root);
 	if(dirIter == NULL) {
 #ifdef DEBUG_NP2
-		fprintf(logfp, "Couldn't open %s\n", root);
+		printf("Couldn't open %s\n", root);
+		sleep(5);
 #endif //DEBUG_NP2
-		return 0;
+		return NULL;
 	}
 	char filename[MAXPATHLEN];
         struct stat filestat;
@@ -511,7 +507,15 @@ void wiimenu_loadgame()
 	int loaded = 0;
 	int* listcnt = wiimenu_buildgamelist("sd:/PC98/ROMS/", list, 20, gamesunk, gamesfdd, gameshdd);
 	printf("\x1b[J\n\n");
+	if(listcnt == NULL) {
+		printf("  Could not get file list. Exiting...\n");
+		sleep(5);
+		wii_shutdown(0);
+		return;
+	}
+	printf("\x1b[J\n\n");
 	printf("  Found:\n  %d Unknown Files\n  %d FDD Images\n  %d HDD Images\n", listcnt[BASETYPE_UNKNOWN], listcnt[BASETYPE_FDD], listcnt[BASETYPE_HDD]);
+	BorderOverlay();
 	sleep(1);
 	while(!loaded) {
 		if(time_to_leave)
@@ -521,36 +525,36 @@ void wiimenu_loadgame()
 		if(selected.hdd0 != NULL) {
 			printf("  Loading %s into HDD0.\n", selected.hdd0);
 			diskdrv_sethdd(0x00, selected.hdd0);
-			free(selected.hdd0);
+			BorderOverlay();
 			sleep(1);
 			loaded = 1;
 		}
 		if(selected.hdd1 != NULL) {
 			printf("  Loading %s into HDD1.\n", selected.hdd1);
 			diskdrv_sethdd(0x01, selected.hdd1);
-			free(selected.hdd1);
+			BorderOverlay();
 			sleep(1);
 			loaded = 1;
 		}
 		if(selected.fdd0 != NULL) {
 			printf("  Loading %s into FDD0.\n", selected.fdd0);
 			diskdrv_setfdd(0x00, selected.fdd0, 0);
-			free(selected.fdd0);
+			BorderOverlay();
 			sleep(1);
 			loaded = 1;
 		}
 		if(selected.fdd0 != NULL) {
 			printf("  Loading %s into FDD1.\n", selected.fdd1);
 			diskdrv_setfdd(0x01, selected.fdd1, 0);
-			free(selected.fdd1);
+			BorderOverlay();
 			sleep(1);
 			loaded = 1;
 		}
 		if(!loaded) {
 			printf("  ERROR: No disks loaded! Please choose a disk!\n");
+			BorderOverlay();
 			sleep(1);
 		}
-		BorderOverlay();
 	}
 	started = 1;
 	sleep(1);
@@ -794,7 +798,7 @@ void wiimenu_options()
 							     (np2cfg.KEY_MODE == 2) ? "JOY2" : (\
 							     (np2cfg.KEY_MODE == 3) ? "MOUSE" : \
 										      "UNK"))));
-			printf("   Sound Config     <NOUSE>%34s >\n", blnkstr);
+			printf("   Sound Config     %32s <DISABLED>\n", blnkstr);
 			printf("   Memory Size:     %41s\n", (np2cfg.EXTMEM   == 0) ? "640K" : (\
 							     (np2cfg.EXTMEM   == 1) ? "640K + 1MB" : (\
 							     (np2cfg.EXTMEM   == 3) ? "640K + 3MB" : (\
@@ -802,7 +806,7 @@ void wiimenu_options()
 										      "UNK"))));
 			printf("   MIDI Panic\n");
 			printf("   Raw DIP Switches %41s >\n", blnkstr);
-			printf("   BIOS Settings    <NOUSE>%34s >\n", blnkstr);
+			printf("   BIOS Settings    %32s <DISABLED>\n", blnkstr);
 			printf("   Return           %41s >\n", blnkstr);
 			BorderOverlay();
 		}
@@ -810,6 +814,7 @@ void wiimenu_options()
 		if(refresh) {
 			printf("\x1B[%d;0H   ", oldselected + 3);
 			printf("\x1B[%d;0H  \x1A", selected + 3);
+			BorderOverlay();
 			oldselected = selected;
 		}
 	}
@@ -905,7 +910,7 @@ void wiimenu_menu()
 				printf("   Return to Emulator                               \n");
 				printf("   Reset Emulator                                   \n");
 			}
-			printf("   Controller Config                                    <NOUSE>\n");
+			printf("   Controller Config                                 <DISABLED>\n");
 			printf("   Switch Disks                                               >\n");
 			printf("   Emulation Options   ");
 			if(!started) {
@@ -922,16 +927,16 @@ void wiimenu_menu()
 			printf("\x1B[%d;0H   ", oldselected + 3);
 			printf("\x1B[%d;0H  \x1A", selected + 3);
 			oldselected = selected;
+			BorderOverlay();
 		}
 	}
-	if(started)
-		log_console_enable_video(0);
+	log_console_enable_video(0);
 }
 
 void wiimenu_initialize()
 {
-	log_console_init(vmode, 9001, (640 - (8 * CONWIDTH)) / 2, (480 - (16 * CONHEIGHT)) / 2, \
-			8 * CONWIDTH, 16 * CONHEIGHT);
+	log_console_init(vmode, 1, (640 - (8 * CONWIDTH)) / 2, (480 -	(16 * CONHEIGHT)) / 2, \
+				8 * CONWIDTH,	16 * CONHEIGHT);
 	log_console_enable_video(1);
 }
 

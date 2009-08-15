@@ -3,14 +3,13 @@
 #include	"fontmng.h"
 #include	"codecnv.h"
 
-
 #if !defined(RESOURCE_US)		// use TTF
 
 #define	FONTMNG_CACHE		64
 
 
 #ifndef	FONTNAME_DEFAULT
-#define	FONTNAME_DEFAULT	"./default.ttf"
+#define	FONTNAME_DEFAULT	file_getcd("default.ttf")
 #endif
 
 static	char	fontname[MAX_PATH] = FONTNAME_DEFAULT;

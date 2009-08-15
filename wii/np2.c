@@ -7,7 +7,6 @@
 #include	"np2.h"
 #include	"dosio.h"
 #include	"commng.h"
-#include	"fontmng.h"
 #include	"inputmng.h"
 #include	"scrnmng.h"
 #include	"soundmng.h"
@@ -23,6 +22,7 @@
 #include	"timing.h"
 #include	"keystat.h"
 #include	"vramhdl.h"
+#include	"fontmng.h"
 #include	"menubase.h"
 #include	"sysmenu.h"
 #include	"menu.h"
@@ -32,8 +32,7 @@
 #include	<wiiuse/wpad.h>
 #include	<fat.h>
 #include	<SDL/SDL.h>
-#include	<SDL/SDL_ttf.h>
-
+#include	<sdcard/wiisd_io.h>
 
 typedef struct bmphead
 {
@@ -105,13 +104,13 @@ static void flagdelete(const char *ext) {
 }
 
 static int flagload(const char *ext, const char *title, BOOL force) {
-
+	
 	int		ret;
 	int		id;
 	char	path[MAX_PATH];
 	char	buf[1024];
 	char	buf2[1024 + 256];
-
+	
 	getstatfilename(path, ext, sizeof(path));
 	id = DID_YES;
 	ret = statsave_check(path, buf, sizeof(buf));
@@ -200,13 +199,13 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 #endif //DEBUG_NP2
-	np2cfg.dipsw[1] |= 1 << 7;
 	dosio_init();
 	file_setcd(datadir);
 	initload();
 	
 	TRACEINIT();
 	
+	strcpy(np2cfg.fontfile, file_getcd("font.bmp"));
 	if (fontmng_init() != SUCCESS) {
 		goto np2main_err2;
 	}
@@ -224,18 +223,19 @@ int main(int argc, char **argv)
 	commng_initialize();
 	sysmng_initialize();
 	taskmng_initialize();
-	strcpy(np2cfg.fontfile, file_getcd("font.bmp"));
 	pccore_init();
 	S98_init();
 
-	scrndraw_redraw();
 	wiimenu_menu();
-	log_console_enable_video(0);
+	if(time_to_leave) {
+		goto np2main_err5;
+	}
+	scrndraw_redraw();
 	pccore_reset();
 
 	if (np2oscfg.resume) {
 		id = flagload(str_sav, str_resume, FALSE);
-		if (id == DID_CANCEL) {
+		if (id == 0) {
 			goto np2main_err5;
 		}
 	}
@@ -308,12 +308,11 @@ int main(int argc, char **argv)
 	S98_trash();
 	soundmng_deinitialize();
 
-	if (sys_updates	& (SYS_UPDATECFG | SYS_UPDATEOSCFG)) {
+	if(sys_updates & (SYS_UPDATECFG | SYS_UPDATEOSCFG)) {
 		initsave();
 	}
 
 	scrnmng_destroy();
-	sysmenu_destroy();
 	TRACETERM();
 	SDL_Quit();
 	dosio_term();

@@ -18,6 +18,7 @@
 static	char	curpath[MAX_PATH];
 static	char	*curfilep = curpath;
 
+extern char* MakeLowercase(char *path);
 
 void dosio_init(void) {
 }
@@ -65,8 +66,8 @@ long file_seek(FILEH handle, long pointer, int method) {
 	return(ftell(handle));
 }
 
-UINT file_read(FILEH handle, void *data, UINT length) {
-
+UINT file_read(FILEH handle, void *data, UINT length)
+{
 	return((UINT)fread(data, 1, length, handle));
 }
 
@@ -405,17 +406,11 @@ const char	*p;
 const char	*q;
 
 	p = file_getname(path);
-	q = NULL;
-	while(*p != '\0') {
-		if (*p == '.') {
-			q = p + 1;
-		}
-		p++;
-	}
-	if (q == NULL) {
-		q = p;
-	}
-	return((char *)q);
+	MakeLowercase((char*)p);
+	q = strrchr(p, '.');
+	char *o = malloc(strlen(q));
+	strcpy(o, ((char*)q) + 1);
+	return((char *)o);
 }
 
 void file_cutext(char *path) {

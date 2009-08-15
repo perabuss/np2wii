@@ -4,7 +4,6 @@
 #include	"taskmng.h"
 #include	"sdlkbd.h"
 #include	"vramhdl.h"
-#include	"menubase.h"
 #include	"sysmenu.h"
 #include	"dosio.h"
 #include	"log_console.h"
@@ -403,7 +402,6 @@ void taskmng_initialize()
 	LoadWiimoteMapping();
 	printf("  Loaded config...\n");
 	BorderOverlay();
-	sleep(1);
 }
 
 void taskmng_exit()
